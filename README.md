@@ -79,7 +79,7 @@ Features réduites / modèles / résultats (S3)
 - création d'un bucket S3 (compartiment)
 - loading des data dans le bucket via le terminal CLI:
 ```bash
-!aws s3 sync /content/drive/MyDrive/fruits s3://aws-bucket-p9/fruits/
+aws s3 sync /nom_dossier_local/ s3://nom_bucket/nom_dossier_s3/
 ```
 - création des droits d'accès à ce bucket = définir la politique d'accès à la ressource (bucket policy)
 
