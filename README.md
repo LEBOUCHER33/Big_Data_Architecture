@@ -10,19 +10,12 @@ Les scripts seront développés en Pyspark pour ensuite être déployés dans un
 
 ## Prérequis
 
-<<<<<<< HEAD
 - environnement PySpark pour executer le code sur le cluster Spark (AWS / EMR)
 - environnement AWS pour l'infrastructure Big Data
-=======
-- environnement PySpark
-- environnement AWS
-
->>>>>>> db47745 (initialisation du readme)
 
 ## Modèle utilisé
 
 On utilisera le modèle entrainé MobileNetV2.
-<<<<<<< HEAD
 On réalisera du transfert learning pour utiliser ses performances et l'ajuster à notre problématique de classification multiclasses en supprimant la dernière couche du modèle.
 
 ## Concept du projet
@@ -91,7 +84,3 @@ aws s3 sync /nom_dossier_local/ s3://nom_bucket/nom_dossier_s3/
 - création des droits d'accès à ce bucket = définir la politique d'accès à la ressource (bucket policy)
 
 ### 3- configurer EC2/EMR
-=======
-On réalisera du transfert learning pour utiliser ses performances et l'ajuster à notre problématique de classification multiclasses.
-
->>>>>>> db47745 (initialisation du readme)
