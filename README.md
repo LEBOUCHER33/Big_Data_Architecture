@@ -10,12 +10,77 @@ Les scripts seront développés en Pyspark pour ensuite être déployés dans un
 
 ## Prérequis
 
-- environnement PySpark
-- environnement AWS
-
+- environnement PySpark pour executer le code sur le cluster Spark (AWS / EMR)
+- environnement AWS pour l'infrastructure Big Data
 
 ## Modèle utilisé
 
 On utilisera le modèle entrainé MobileNetV2.
-On réalisera du transfert learning pour utiliser ses performances et l'ajuster à notre problématique de classification multiclasses.
+On réalisera du transfert learning pour utiliser ses performances et l'ajuster à notre problématique de classification multiclasses en supprimant la dernière couche du modèle.
 
+## Concept du projet
+
+le volume important de données implicite un environnement big data afin que le stockage des données et les calculs soient distribués sur un cluster de machines.
+
+Apach Spark est un moteur de calcul distribué qui va gérer la complexité Big Data. 
+PySpark est l'API python de Spark.
+
+## outils AWS
+
+On utilisera le prestataire web AWS comme fournisseur de ressources et accéder à l'infrastructure nécessaire :
+
+- stockage des données (S3)
+
+- serveurs (EC2)
+
+- cluster Spark pour coordonner, scaler et executer les jobs (EMR = driver + workers)
+
+- réseau
+
+- sécurité et permisssions (IAM)
+
+
+
+## Process
+
+1- tester le processing des données en local
+
+2- configurer les outils AWS : IAM / S3 / EC2 / EMR
+
+3- déployer les calculs sur le cloud
+
+## Workflow 
+
+Images (S3)
+   ↓
+Cluster EMR (Spark)
+   ↓
+Feature extraction (MobileNetV2)
+   ↓
+StandardScaler + PCA (Spark MLlib)
+   ↓
+Features réduites / modèles / résultats (S3)
+
+
+### 1- configurer un compte AWS
+
+1- création d'un compte root AWS
+2- sécurisation du compte root MFA (Multi Factor Authentification)
+3- création d'un compte IAM (Identity and Access Management)
+4- définir les clés d'accès API et les droits pour S3/EC2/EMR :
+
+    - créer un groupe IAM = conteneur pour les droits
+    - rattacher un user IAM à ce groupe
+    - donner les droits full access avec la politique AdministratorAccess ou ajuster la politique d'accès aux différents services
+    - créer les clés pour utiliser les web services via un terminal CLI, des scripts ou des clusters EMR
+
+### 2- configurer le stockage S3
+
+- création d'un bucket S3 (compartiment)
+- loading des data dans le bucket via le terminal CLI:
+```bash
+!aws s3 sync /content/drive/MyDrive/fruits s3://aws-bucket-p9/fruits/
+```
+- création des droits d'accès à ce bucket = définir la politique d'accès à la ressource (bucket policy)
+
+### 3- configurer EC2/EMR
