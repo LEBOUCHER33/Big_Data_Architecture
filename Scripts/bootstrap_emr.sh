@@ -13,9 +13,7 @@ yum update -y
 python3 -m pip install --upgrade pip
 
 # 3. Installation des librairies
-# Note : On retire pyspark car EMR l'inclut déjà par défaut.
-# Note : TensorFlow et Keras sont très lourds, assurez-vous d'avoir des instances 
-# avec assez de stockage (ebs) et de RAM.
+
 echo "=== Installation des librairies Python ==="
 python3 -m pip install \
     pandas \
