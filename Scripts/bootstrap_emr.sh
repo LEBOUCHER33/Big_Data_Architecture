@@ -1,17 +1,23 @@
 """
 Script pour mettre à jour et installer toutes les librairies nécessaires à l'environnement d'éxecution
 """
-
 #!/bin/bash
-set -e
+set -e # Arrête le script en cas d'erreur
 
-echo "=== Mise à jour système ==="
-sudo yum update -y
+echo "=== Début du Bootstrap ==="
 
-echo "=== Installation Python libs ==="
-sudo python3 -m pip install --upgrade pip
+# 1. Mise à jour système (optionnel, peut ralentir le démarrage)
+yum update -y
 
-sudo python3 -m pip install \
+# 2. Mise à jour de pip
+python3 -m pip install --upgrade pip
+
+# 3. Installation des librairies
+# Note : On retire pyspark car EMR l'inclut déjà par défaut.
+# Note : TensorFlow et Keras sont très lourds, assurez-vous d'avoir des instances 
+# avec assez de stockage (ebs) et de RAM.
+echo "=== Installation des librairies Python ==="
+python3 -m pip install \
     pandas \
     pillow \
     scikit-learn \
@@ -20,13 +26,10 @@ sudo python3 -m pip install \
     pyarrow \
     boto3 \
     s3fs \
-    matplotlib \
-    pyspark
+    matplotlib
 
+# 4. Vérification TensorFlow
 echo "=== Vérification TensorFlow ==="
-python3 - <<EOF
-import tensorflow as tf
-print("TensorFlow version:", tf.__version__)
-EOF
+python3 -c "import tensorflow as tf; print('TensorFlow version:', tf.__version__)"
 
-echo "=== Bootstrap terminé ==="
+echo "=== Bootstrap terminé avec succès ==="

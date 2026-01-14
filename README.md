@@ -91,6 +91,7 @@ EC2 AWS = serveur virtuel sur le cloud / cluster de machines
 EMR = Cluster Big Data clé en mais basé sur plusieurs EC2 déjà configuré pour Spark
 
 1- développer un script bash pour configurer l'environnement d'execution (mise à jour et installation des libs)
+Ce script bootstrap garantira que les noeuds (machines) disposent des mêmes lib configurations au lancement
 
 2- loader le script bash dans le stockage S3
 
