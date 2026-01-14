@@ -74,6 +74,7 @@ Features réduites / modèles / résultats (S3)
     - donner les droits full access avec la politique AdministratorAccess ou ajuster la politique d'accès aux différents services
     - créer les clés pour utiliser les web services via un terminal CLI, des scripts ou des clusters EMR
 
+
 ### 2- configurer le stockage S3
 
 - création d'un bucket S3 (compartiment)
@@ -83,4 +84,21 @@ aws s3 sync /nom_dossier_local/ s3://nom_bucket/nom_dossier_s3/
 ```
 - création des droits d'accès à ce bucket = définir la politique d'accès à la ressource (bucket policy)
 
-### 3- configurer EC2/EMR
+
+### 3- configurer EMR
+
+EC2 AWS = serveur virtuel sur le cloud / cluster de machines
+EMR = Cluster Big Data clé en mais basé sur plusieurs EC2 déjà configuré pour Spark
+
+1- développer un script bash pour configurer l'environnement d'execution (mise à jour et installation des libs)
+
+2- loader le script bash dans le stockage S3
+
+3-créer le cluster EMR et le configurer :
+   - accès et sécurité
+   - bootstrap actions
+
+4- connexion au cluster EMR
+
+5- lancement des jobs depuis S3
+
