@@ -91,15 +91,52 @@ EC2 AWS = serveur virtuel sur le cloud / cluster de machines
 EMR = Cluster Big Data clé en mais basé sur plusieurs EC2 déjà configuré pour Spark
 
 1- développer un script bash pour configurer l'environnement d'execution (mise à jour et installation des libs)
-Ce script bootstrap garantira que les noeuds (machines) disposent des mêmes lib configurations au lancement
+Ce script bootstrap garantira que les noeuds (machines) disposent des mêmes lib / configurations au lancement
 
-2- loader le script bash dans le stockage S3
+2- loader les scripts bash et pyspark dans le stockage S3
 
 3-créer le cluster EMR et le configurer :
+   - définir les applications 
    - accès et sécurité
-   - bootstrap actions
+      - paramétrer les rôles IAM : définir deux rôles et leur attribuer des policies
+         1- Fonction EMR : EMR_DefaultRole (AmazonEMRServicePolicy_v2 + AmazonElasticMapReduceRole)
+         2- Fonction EC2 : EMR_EC2_DefaultRole (AmazonElasticMapReduceforEC2Role + AmazonSSMManagedInstanceCore)
+      - s'assurer que les subnets soient bien publics avec un enregistrement DNS A au lancement
+      - définir la résiliation (manuelle ou automatique)
+      - créer une paire de clés SSH pour suivre les logs en lignes de commandes (AWSCli)
+      ```ssh -i "votre-clef.pem" hadoop@votre-dns-public-master```
+   
+   - définir une fonction d'amorçage pour le bootsptrapping : associer un script bash pour configurer l'environnement d'execution (MAJ et installation des libs)
 
-4- connexion au cluster EMR
+   - associer des steps : ajouter les scripts d'éxecution pyspark
+
+4- connexion au cluster EMR pour suivi SSH : PuTTy
+Téléchargez PuTTY.exe sur votre ordinateur à partir de : https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html 
+Démarrez PuTTY.
+Dans la liste Category (Catégorie), sélectionnez Session.
+Dans le champ Host Name (Nom d'hôte), entrez hadoop@ec2-##-##-##.eu-north-1.compute.amazonaws.com
+Dans la liste Category, développez Connection (Connexion) > SSH, puis sélectionnez Auth.
+Pour Private key file for authentication (Fichier de clé privée pour l'authentification), sélectionnez Browse (Parcourir) et le fichier de clé privée (p9-key.ppk) que vous avez utilisé pour lancer le cluster.
+Cliquez sur Open (Ouvrir).
+Sélectionnez Yes (Oui) pour ignorer l'alerte de sécurité.
 
 5- lancement des jobs depuis S3
+
+   5-1 Suivi de l'action d'amorçage
+
+```
+# Pour voir l'erreur de votre script bash
+cat /var/log/bootstrap-actions/1/stderr
+
+# Pour voir ce que votre script a affiché (les echo)
+cat /var/log/bootstrap-actions/1/stdout
+```
+
+   5-2 Suivi de l'execution du script pyspark
+
+```
+spark-submit --master yarn --deploy-mode client script_pyspark.py > logs_output.txt 2>&1
+
+grep "DEBUG >>>" logs_output.txt
+``` 
 

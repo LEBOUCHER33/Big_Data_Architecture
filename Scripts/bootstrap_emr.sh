@@ -1,13 +1,7 @@
-"""
-Script pour mettre à jour et installer toutes les librairies nécessaires à l'environnement d'éxecution
-"""
 #!/bin/bash
-set -e # Arrête le script en cas d'erreur
+set -x # Affiche chaque commande avant son exécution
 
 echo "=== Début du Bootstrap ==="
-
-# 1. Mise à jour système (optionnel, peut ralentir le démarrage)
-yum update -y
 
 # 2. Mise à jour de pip
 python3 -m pip install --upgrade pip
