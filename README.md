@@ -135,8 +135,22 @@ cat /var/log/bootstrap-actions/1/stdout
    5-2 Suivi de l'execution du script pyspark
 
 ```
-spark-submit --master yarn --deploy-mode client script_pyspark.py > logs_output.txt 2>&1
+spark-submit --master yarn --deploy-mode client s3://aws-bucket-p9/script_pyspark.py 
 
+spark-submit --master yarn --deploy-mode client s3://aws-bucket-p9/script_pyspark.py > logs_output.txt 2>&1
 grep "DEBUG >>>" logs_output.txt
 ``` 
+
+
+## 4- Relier un notebook à un cluster
+
+- créer un studio personnalisé :
+   - lui définir un rôle 
+   - créer les règles entrantes et sortantes pour que le studio et l'EMR puisse communiquer
+   
+- créer un workspace 
+
+- le relier à un cluster
+
+
 
