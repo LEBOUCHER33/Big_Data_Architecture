@@ -45,7 +45,7 @@ On utilisera le prestataire web AWS comme fournisseur de ressources et accéder 
 
 1- tester le processing des données en local
 
-2- configurer les outils AWS : IAM / S3 / EC2 / EMR
+2- configurer les outils AWS : IAM / S3 / EC2 / EMR / VPC / security groups / security rules / subnets / Studio / workspace 
 
 3- déployer les calculs sur le cloud
 
@@ -75,6 +75,7 @@ Features réduites / modèles / résultats (S3)
     - créer les clés pour utiliser les web services via un terminal CLI, des scripts ou des clusters EMR
 
 
+
 ### 2- configurer le stockage S3
 
 - création d'un bucket S3 (compartiment)
@@ -82,7 +83,7 @@ Features réduites / modèles / résultats (S3)
 ```bash
 aws s3 sync /nom_dossier_local/ s3://nom_bucket/nom_dossier_s3/
 ```
-- création des droits d'accès à ce bucket = définir la politique d'accès à la ressource (bucket policy)
+- création des droits d'accès à ce bucket = définir la politique d'accès à la ressource S3 (bucket policy)
 
 
 ### 3- configurer EMR
@@ -93,14 +94,14 @@ EMR = Cluster Big Data clé en mais basé sur plusieurs EC2 déjà configuré po
 1- développer un script bash pour configurer l'environnement d'execution (mise à jour et installation des libs)
 Ce script bootstrap garantira que les noeuds (machines) disposent des mêmes lib / configurations au lancement
 
-2- loader les scripts bash et pyspark dans le stockage S3
+2- loader le script bash dans le stockage S3
 
 3-créer le cluster EMR et le configurer :
    - définir les applications 
    - accès et sécurité
       - paramétrer les rôles IAM : définir deux rôles et leur attribuer des policies
-         1- Fonction EMR : EMR_DefaultRole (AmazonEMRServicePolicy_v2 + AmazonElasticMapReduceRole)
-         2- Fonction EC2 : EMR_EC2_DefaultRole (AmazonElasticMapReduceforEC2Role + AmazonSSMManagedInstanceCore)
+         1- Fonction EMR : EMR_DefaultRole (AmazonEMRServicePolicy_v2 + AmazonElasticMapReduceRole) pour créer des clusters EMR
+         2- Fonction EC2 : EMR_EC2_DefaultRole (AmazonElasticMapReduceforEC2Role + AmazonSSMManagedInstanceCore) pour créer des instances EC2
       - s'assurer que les subnets soient bien publics avec un enregistrement DNS A au lancement
       - définir la résiliation (manuelle ou automatique)
       - créer une paire de clés SSH pour suivre les logs en lignes de commandes (AWSCli)
@@ -141,11 +142,14 @@ spark-submit --master yarn --deploy-mode client s3://aws-bucket-p9/script_pyspar
 grep "DEBUG >>>" logs_output.txt
 ``` 
 
+## 4- Configurer le réseau 
 
-## 4- Relier un notebook à un cluster
+Définir les groupes de sécurité du réseau qui constituent le pare-feu réseau de votre cluster EMR
+
+## 5- Relier un notebook à un cluster
 
 - créer un studio personnalisé :
-   - lui définir un rôle 
+   - lui définir un rôle pour pouvoir lancer des jobs sur le cluster depuis le workspace / accéder à S3 et lister les clusters
    - créer les règles entrantes et sortantes pour que le studio et l'EMR puisse communiquer
    
 - créer un workspace 
